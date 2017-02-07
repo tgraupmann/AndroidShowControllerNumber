@@ -15,6 +15,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Device Name"
+            android:textColor="#ffffff"
+            android:gravity="left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="DeviceName"
+            android:id="@+id/txtDeviceName"
+            android:textColor="#8d8d8d"
+            android:gravity="left"
+            android:paddingLeft="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Device Id"
             android:textColor="#ffffff"
             android:gravity="left" />
@@ -23,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Device Id"
+            android:text="DeviceId"
             android:id="@+id/txtDeviceId"
             android:textColor="#8d8d8d"
             android:gravity="left"

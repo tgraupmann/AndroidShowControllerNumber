@@ -5,7 +5,9 @@ package com.tgraupmann.showcontrollernumber;
  */
 
 public class ControllerData {
+    public String mDescriptor;
     public int mDeviceId;
-    public int mPlayerNum;
     public int mKeyCode;
+    public String mName;
+    public int mPlayerNum;
 }

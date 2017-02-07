@@ -27,17 +27,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
-    private ControllerData getController(int deviceId) {
+    // assumes descriptor is not null
+    private ControllerData getController(String descriptor) {
         for (ControllerData controller : mControllers) {
-            if (controller.mDeviceId == deviceId) {
+            if (controller.mDescriptor.equals(descriptor)) {
                 return controller;
             }
         }
-
-        ControllerData controller = new ControllerData();
-        controller.mDeviceId = deviceId;
-        mControllers.add(controller);
-        return controller;
+        return null;
     }
 
     private static boolean isGamepad(InputDevice inputDevice) {
@@ -51,50 +48,41 @@ public class MainActivity extends Activity {
                 inputDevice.getKeyboardType() == InputDevice.KEYBOARD_TYPE_NON_ALPHABETIC;
     }
 
-    private static int getPlayerNum(int deviceId) {
+    private int getPlayerNum(String descriptor) {
         int[] ids = InputDevice.getDeviceIds();
-
-        int playerNum=0;
-        for (int i = 0; i < ids.length; ++i) {
-            InputDevice inputDevice = InputDevice.getDevice(ids[i]);
-            if (!isGamepad(inputDevice) &&
-                    !isRemote(inputDevice)) {
-                continue;
-            }
-            if (playerNum >= 4) {
-                if (sEnableLogging) {
-                    Log.d(TAG, "getPlayerNum: >=4 playerNum="+playerNum);
-                }
-                return 0;
-            }
-            if (deviceId == ids[i]) {
-                if (sEnableLogging) {
-                    Log.d(TAG, "getPlayerNum playerNum="+playerNum);
-                }
-                return playerNum;
-            }
-            ++playerNum;
+        ControllerData controller = getController(descriptor);
+        if (null == controller) {
+            return 0;
         }
-
-        if (sEnableLogging) {
-            Log.d(TAG, "getPlayerNum: deviceId not found playerNum=0");
-        }
-        return 0;
+        return controller.mPlayerNum;
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         final ListView listControllers = (ListView) findViewById(R.id.listControllers);
-        ControllerData controller = getController(event.getDeviceId());
-        controller.mPlayerNum = getPlayerNum(event.getDeviceId());
-        controller.mKeyCode = event.getKeyCode();
-        if (mControllers.size() == 0) {
-            listControllers.setAdapter(null);
-            listControllers.invalidate();
-        } else {
-            ControllerAdapter adapter = new ControllerAdapter(MainActivity.this, mControllers);
-            listControllers.setAdapter(adapter);
+        InputDevice inputDevice = event.getDevice();
+        if (null != inputDevice) {
+            String descriptor = inputDevice.getDescriptor();
+            if (null != descriptor) {
+                ControllerData controller = getController(descriptor);
+                if (controller == null) {
+                    controller = new ControllerData();
+                    controller.mDescriptor = descriptor;
+                    controller.mDeviceId = event.getDeviceId();
+                    controller.mName = event.getDevice().getName();
+                    controller.mPlayerNum = mControllers.size();
+                    mControllers.add(controller);
+                }
+                controller.mKeyCode = event.getKeyCode();
+                if (mControllers.size() == 0) {
+                    listControllers.setAdapter(null);
+                    listControllers.invalidate();
+                } else {
+                    ControllerAdapter adapter = new ControllerAdapter(MainActivity.this, mControllers);
+                    listControllers.setAdapter(adapter);
+                }
+            }
         }
 
         return super.dispatchKeyEvent(event);

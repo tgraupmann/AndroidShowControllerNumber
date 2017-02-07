@@ -40,8 +40,11 @@ public class ControllerAdapter extends ArrayAdapter<ControllerData> {
 
         final Activity activity = (Activity)convertView.getContext();
 
+        final TextView txtDeviceName = (TextView)convertView.findViewById(R.id.txtDeviceName);
+        txtDeviceName.setText(item.mName);
+
         final TextView txtDeviceId = (TextView)convertView.findViewById(R.id.txtDeviceId);
-        txtDeviceId.setText(Long.toString(item.mDeviceId));
+        txtDeviceId.setText(Long.toString(item.mDeviceId)+" "+item.mDescriptor);
 
         final TextView txtPlayerNum = (TextView)convertView.findViewById(R.id.txtPlayerNum);
         txtPlayerNum.setText(Long.toString(item.mPlayerNum));
